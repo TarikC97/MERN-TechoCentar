@@ -1,0 +1,7 @@
+React App:
+	1.index.html (div id = root)
+	2.index.js    (getelbyid = 'root', body <app />)
+	3.app.js
+Gitignore:
+	Allows to describe folders or file ,which we dont wanna push to github.
+	Example: Nodemodules(unnecessary), just use npm install.
