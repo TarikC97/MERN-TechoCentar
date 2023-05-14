@@ -2,6 +2,13 @@ React App:
 	1.index.html (div id = root)
 	2.index.js    (getelbyid = 'root', body <app />)
 	3.app.js
+	 3.1 Route< path='/' element={<Home/>} exact/>
+	  Exact: If we type anything after / it returns Home,
+		 Thats why we use exact we just want / to shows Home,
+		 nothing else.
+	3.2 Image boostrap Component
+	   <Image src={product.image} alt={product.name} fluid />
+	   Fluid: Keeps image inside container.
 Gitignore:
 	Allows to describe folders or file ,which we dont wanna push to github.
 	Example: Nodemodules(unnecessary), just use npm install.
