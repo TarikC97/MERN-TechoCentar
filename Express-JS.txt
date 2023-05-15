@@ -1,0 +1,19 @@
+NodeJs:
+   Starting server:
+	const express = require('express')
+	const app = express()
+	app.get('/', (req,res) =>{
+		res.send('Server radi')
+	}
+   //Getting one product from products in json format.
+	app.get('/api/products/:id', (req,res) =>{
+	 const product = products.find((el) => el._id == req.params.id)
+	 res.json(product)
+	}
+  Nodemon:
+	package.json:
+		 "server": "nodemon backend/server",
+   		 "client": "npm start --prefix frontend",
+                 Vs code: npm run server(root)
+			  npm run client(root)
+			  npm run dev(server,client(same time))

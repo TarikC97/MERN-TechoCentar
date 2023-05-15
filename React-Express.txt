@@ -1,0 +1,19 @@
+Fetching Data from backend:
+   Frontend:
+	//Proxy is used in package.json to avoid Cors issues.
+	frontend/package.json = > proxy : 'http://127.0.0.1:5000'
+	Home.js: 
+	  useEffect(() => {
+  	const fetchProducts = async () =>{
+    	const {data} = await axios.get('/api/products')
+    	setProducts(data)
+  	}
+	fetchProducts()
+	}, [])
+   Backend:
+	data:products.js
+	server.js:
+	  app.get('/api/products',(req,res) =>{
+		res.json(products) }
+
+	
