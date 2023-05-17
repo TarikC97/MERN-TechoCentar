@@ -1,0 +1,25 @@
+Connecting to MongoDB:
+	//MONGO_URI - database url from MongoDBAtlas
+	const connectDB = async () =>{
+    try{
+        const conn = await mongoose.connect(process.env.MONGO_URI,{
+            useUnifiedTopology: true,
+            useNewUrlParser: true
+        })
+     console.log(`MongoDB Connected: ${conn.connection.host}`.cyan.underline)
+    }catch(error){
+        console.error(`Error:${error.message}`.red.underline.bold)
+        process.exit(1)
+        (1)Means exit with failure
+     }
+   }
+Working with MongoDB Compass:
+	Seeder.js:
+	   Used for manually importing and deleting data in Compass.
+	   Dealing with db, needs to be async because it returns a promise:
+		const importData = async (
+		try{
+		 }
+		catch(error){
+		}	
+	 ) =>{}

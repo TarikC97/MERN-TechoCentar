@@ -12,3 +12,8 @@ React App:
 Gitignore:
 	Allows to describe folders or file ,which we dont wanna push to github.
 	Example: Nodemodules(unnecessary), just use npm install.
+Redux:
+	Used for Global States
+	  (Example:Products used in multiple components and pages.)
+	Pattern:
+	  Components=>Action=>Server=>Action=>Redux=>Components
