@@ -10,7 +10,7 @@ const HomeScreen = () => {
 
 const dispatch = useDispatch()
 //Same name as reducer in store.js
-//Use selector used for displaying data
+//useSelector used for displaying data
 const productList = useSelector(state => state.productList)
 //Fetching certain part of data.
 const {loading,error,products} = productList
