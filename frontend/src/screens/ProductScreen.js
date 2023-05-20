@@ -10,7 +10,7 @@ import Message from '../components/Message'
 
 const ProductScreen = () => {
     //Setting quantity of products
-    const [qty,setQty] = useState(0)
+    const [qty,setQty] = useState(1)
 
     //Returns object with key id and its value
     const {id} = useParams()
