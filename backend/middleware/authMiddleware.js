@@ -12,10 +12,14 @@ const protect = AsyncHandler(async(req,res,next) =>{
             //Taking token id without 'Bearer[0] tokenid[1]'
             token = req.headers.authorization.split(' ')[1]
             const decoded = jwt.verify(token,process.env.JWT_SECRET)
-            console.log(decoded)
+            //Getting user data without password
+            req.user = await User.findById(decoded.id).select('-password')
+            // console.log(decoded)
             next()
         } catch (error) {
-            
+            console.error(error)
+            res.status(401)
+            throw new Error('Not authorized, token failed')
         }
     }
     if(!token){
