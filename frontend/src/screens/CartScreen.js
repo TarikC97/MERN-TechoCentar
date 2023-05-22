@@ -2,7 +2,7 @@ import React,{useEffect} from 'react'
 import {useDispatch,useSelector} from 'react-redux'
 import Message from '../components/Message'
 import {Row,Col,ListGroup,Image,Form,Button,Card, ListGroupItem} from 'react-bootstrap'
-import { addToCart } from '../actions/cartActions'
+import { addToCart,removeFromCart } from '../actions/cartActions'
 import {Link,useParams,useNavigate, useSearchParams} from 'react-router-dom'
 
 //Location argument(quantity)
@@ -27,7 +27,7 @@ const CartScreen = () => {
    },[dispatch,id,qtyNum])
 
    const removeFromCartHandler = (id) =>{
-      console.log('remove')
+      dispatch(removeFromCart(id))
    }
    const checkoutHandler =()=>{
     //IF not login, goes to login else:

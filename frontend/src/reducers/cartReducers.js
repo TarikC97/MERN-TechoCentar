@@ -22,6 +22,7 @@ export const cartReducer = (state={cartItems:[]},action) =>{
         case CART_REMOVE_ITEM:
             return{
                 ...state,
+                //Removes all items where item.id == data.id
                 cartItems: state.cartItems.filter((item) => item.product !== action.payload)
             }
         default:
