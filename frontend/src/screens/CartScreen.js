@@ -32,7 +32,7 @@ const CartScreen = () => {
    const checkoutHandler =()=>{
     //IF not login, goes to login else:
     //If logged in , goes to shipping.
-    navigate('/login?redirect=shipping')
+    navigate('/login?redirect=/shipping')
    }
 
   return <Row>

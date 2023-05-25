@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { CART_ADD_ITEM,CART_REMOVE_ITEM } from '../constants/cartConstants'
+import { CART_ADD_ITEM,CART_REMOVE_ITEM, CART_SAVE_SHIPPING_ADDRESS } from '../constants/cartConstants'
 
 //Saving our entire cart to local storage - thats why we use getState.
 export const addToCart = (id, qty) => async(dispatch,getState) => {
@@ -32,6 +32,16 @@ export const removeFromCart = (id) => async(dispatch,getState) => {
     })
     //Saving entire cart in Storage - Get state(Only saves string in localSTORAGE)
     localStorage.setItem('cartItems',JSON.stringify(getState().cart.cartItems))
+}
+//Takes form data (data)
+export const saveShippingAddress = (data) => async(dispatch) => {
+    //Fetching data from server through payload
+    dispatch({
+        type: CART_SAVE_SHIPPING_ADDRESS,
+        payload: data
+    })
+    //Saving entire cart in Storage - Get state(Only saves string in localSTORAGE)
+    localStorage.setItem('shippingAddress',JSON.stringify(data))
 }
 
 
