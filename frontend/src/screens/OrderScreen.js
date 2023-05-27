@@ -5,6 +5,8 @@ import { useDispatch,useSelector} from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import {getOrderDetails } from '../actions/orderActions'
+import axios from 'axios'
+
 
 const OrderScreen = () => {
 
@@ -24,8 +26,15 @@ const OrderScreen = () => {
     
   }
  useEffect(() =>{
+    //Paypal script
+    const addPayPalScript = async()=>{
+        const {data:clientId} = await axios.get('/api/config/paypal')
+        console.log(clientId)
+    }
+    addPayPalScript()
+
     dispatch(getOrderDetails(id))
-},[])
+},[dispatch,id])
 
   return loading ? <Loader /> : error ? 
   <Message variant='danger'>{error}</Message> : <>

@@ -24,6 +24,9 @@ app.use('/api/products', productRouters)
 app.use('/api/users', userRoutes)
 app.use('/api/orders',orderRoutes)
 
+//Fetching Paypal client id (env)
+app.get('/api/config/paypal',(req,res)=> res.send(process.env.PAYPAL_CLIENT_ID))
+
 //Middleware for 404 errors
 app.use(notFound)
 //Middleware for errors handlers
