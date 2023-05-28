@@ -1,4 +1,4 @@
-import {USER_DELETE_FAIL, USER_DELETE_REQUEST, USER_DELETE_SUCCESS, USER_DETAILS_FAIL, USER_DETAILS_REQUEST, USER_DETAILS_RESET, USER_DETAILS_SUCCESS, USER_LIST_FAIL, USER_LIST_REQUEST, USER_LIST_RESET, USER_LIST_SUCCESS, USER_LOGIN_FAIL, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_LOGOUT, USER_REGISTER_FAIL, USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS, USER_UPDATE_PROFILE_FAIL, USER_UPDATE_PROFILE_REQUEST, USER_UPDATE_PROFILE_SUCCESS} from '../constants/userConstants'
+import {USER_DELETE_FAIL, USER_DELETE_REQUEST, USER_DELETE_SUCCESS, USER_DETAILS_FAIL, USER_DETAILS_REQUEST, USER_DETAILS_RESET, USER_DETAILS_SUCCESS, USER_LIST_FAIL, USER_LIST_REQUEST, USER_LIST_RESET, USER_LIST_SUCCESS, USER_LOGIN_FAIL, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_LOGOUT, USER_REGISTER_FAIL, USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS, USER_UPDATE_FAIL, USER_UPDATE_PROFILE_FAIL, USER_UPDATE_PROFILE_REQUEST, USER_UPDATE_PROFILE_SUCCESS, USER_UPDATE_REQUEST, USER_UPDATE_SUCCESS} from '../constants/userConstants'
 import axios from 'axios'
 import { ORDER_LIST_MY_RESET} from '../constants/orderConstants'
 
@@ -209,7 +209,7 @@ export const deleteUser = (id) => async(dispatch,getState) =>{
             }
         }
         //Making request in the headers.
-        const {data} = await axios.delete(`/api/users/${id}`,config)
+        await axios.delete(`/api/users/${id}`,config)
 
         //Getting user data
         dispatch({
@@ -218,6 +218,46 @@ export const deleteUser = (id) => async(dispatch,getState) =>{
     } catch (error) {
         dispatch({
             type: USER_DELETE_FAIL,
+            payload: error.response && 
+                error.response.data.message ? error.response.data.message :
+                error.message
+        })
+    }
+}
+
+//We need getState to get token from user.
+//Passing whole user object(updating all properties of object)
+export const updateUser = (user) => async(dispatch,getState) =>{
+    try {
+        dispatch({
+            type: USER_UPDATE_REQUEST
+        })
+
+        const {userLogin:{userInfo}} = getState()
+
+        //When we are sending data we want to send in headers
+        //content-type app/json
+        const config = {
+            headers:{
+                'Content-type':'application/json',
+                Authorization: `Bearer ${userInfo.token}`
+            }
+        }
+        //Making request in the headers.
+       const {data} = await axios.put(`/api/users/${user._id}`,user,config)
+
+        //Updating user data
+        dispatch({
+            type: USER_UPDATE_SUCCESS,
+        })
+        //Dispaying updated user data
+        dispatch({
+            type: USER_DETAILS_SUCCESS,
+            payload: data
+        })
+    } catch (error) {
+        dispatch({
+            type: USER_UPDATE_FAIL,
             payload: error.response && 
                 error.response.data.message ? error.response.data.message :
                 error.message
