@@ -4,7 +4,8 @@ import {Button,Row,Card,Col,ListGroup,Image,ListGroupItem} from 'react-bootstrap
 import { useDispatch,useSelector} from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
-import {getOrderDetails,payOrder } from '../actions/orderActions'
+import {getOrderDetails } from '../actions/orderActions'
+import { payOrder } from '../actions/orderActions'
 import axios from 'axios'
 import {PayPalButton} from 'react-paypal-button-v2'
 import { ORDER_PAY_RESET } from '../constants/orderConstants'
@@ -21,8 +22,8 @@ const OrderScreen = () => {
   const orderDetails = useSelector(state => state.orderDetails)
   const {order,loading,error} = orderDetails
 
-  const payOrder = useSelector(state => state.payOrder)
-  const {loading:loadingPay,success: successPay} = payOrder
+  const orderPay = useSelector((state) => state.orderPay)
+  const {loading:loadingPay,success: successPay} = orderPay
 
   if(!loading){
     const addDecimals = (number) =>{
