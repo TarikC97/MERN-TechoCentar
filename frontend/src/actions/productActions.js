@@ -4,7 +4,10 @@ import {
     PRODUCT_LIST_FAIL,
     PRODUCT_DETAILS_REQUEST,
     PRODUCT_DETAILS_SUCCESS,
-    PRODUCT_DETAILS_FAIL
+    PRODUCT_DETAILS_FAIL,
+    PRODUCT_DELETE_REQUEST,
+    PRODUCT_DELETE_FAIL,
+    PRODUCT_DELETE_SUCCESS
 } from '../constants/productConstants'
 import axios from 'axios'
 //Action for list of products
@@ -47,6 +50,39 @@ export const listProductDetails = (id) => async(dispatch)=>{
             payload: error.response && 
             error.response.data.message ? error.response.data.message :
             error.message
+        })
+    }
+}
+
+//We need getState to get token from user.
+export const deleteProduct = (id) => async(dispatch,getState) =>{
+    try {
+        dispatch({
+            type: PRODUCT_DELETE_REQUEST
+        })
+
+        const {userLogin:{userInfo}} = getState()
+
+        //When we are sending data we want to send in headers
+        //content-type app/json
+        const config = {
+            headers:{
+                Authorization: `Bearer ${userInfo.token}`
+            }
+        }
+        //Making request in the headers.
+        await axios.delete(`/api/products/${id}`,config)
+
+        //Getting user data
+        dispatch({
+            type: PRODUCT_DELETE_SUCCESS,
+        })
+    } catch (error) {
+        dispatch({
+            type: PRODUCT_DELETE_FAIL,
+            payload: error.response && 
+                error.response.data.message ? error.response.data.message :
+                error.message
         })
     }
 }

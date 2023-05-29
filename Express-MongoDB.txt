@@ -23,3 +23,6 @@ Working with MongoDB Compass:
 		catch(error){
 		}	
 	 ) =>{}
+Importing data from file to db:
+	npm run data:import
+	(Clears all orders)

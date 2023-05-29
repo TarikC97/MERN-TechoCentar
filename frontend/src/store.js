@@ -1,7 +1,7 @@
 import { legacy_createStore,combineReducers,applyMiddleware} from 'redux'
 import thunk from 'redux-thunk'
 import {composeWithDevTools} from 'redux-devtools-extension'
-import {productListReducer,productDetailsReducer} from './reducers/productReducers'
+import {productListReducer,productDetailsReducer,productDeleteReducer} from './reducers/productReducers'
 import { cartReducer } from './reducers/cartReducers'
 import { userDetailsReducer, userLoginReducer, userRegisterReducer, userUpdateProfileReducer,userListReducer,userDeleteReducer,userUpdateReducer } from './reducers/userReducers'
 import {orderCreateReducer,orderDetailsReducer, orderPayReducer ,OrderListMyReducer} from './reducers/orderReducers'
@@ -22,7 +22,7 @@ const reducer = combineReducers({
     orderDetails: orderDetailsReducer,
     orderPay: orderPayReducer,
     orderListMy: OrderListMyReducer,
-
+    productDelete: productDeleteReducer,
 })
 
 //Getting Cart Items from LocalStorage(Needs to be String)
