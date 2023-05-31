@@ -4,7 +4,15 @@ import mongoose from "mongoose";
 const reviewSchema = mongoose.Schema({
     name: {type: String, required:true},
     rating: {type: Number, required:true},
-    comment: {type: String, required:true}
+    comment: {type: String, required:true},
+    //User is connected to review
+    user:{
+        //Which user(admin)create which product
+         type: mongoose.Schema.Types.ObjectId,
+         required: true,
+         //Ads relationship between product and user
+         ref:'User'
+      },
 },{
     timestamps:true
 })

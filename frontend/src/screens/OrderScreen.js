@@ -4,11 +4,11 @@ import {Button,Row,Card,Col,ListGroup,Image,ListGroupItem} from 'react-bootstrap
 import { useDispatch,useSelector} from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
-import {getOrderDetails } from '../actions/orderActions'
+import {getOrderDetails,deliverOrder } from '../actions/orderActions'
 import { payOrder } from '../actions/orderActions'
 import axios from 'axios'
 import {PayPalButton} from 'react-paypal-button-v2'
-import { ORDER_PAY_RESET } from '../constants/orderConstants'
+import { ORDER_PAY_RESET,ORDER_DELIVER_RESET } from '../constants/orderConstants'
 
 
 const OrderScreen = () => {
@@ -19,11 +19,17 @@ const OrderScreen = () => {
   const {id} = useParams()
   const dispatch = useDispatch()
  
+  const userLogin = useSelector(state => state.userLogin)
+  const {userInfo} = userLogin
+
   const orderDetails = useSelector(state => state.orderDetails)
   const {order,loading,error} = orderDetails
 
   const orderPay = useSelector((state) => state.orderPay)
   const {loading:loadingPay,success: successPay} = orderPay
+  
+  const orderDeliver = useSelector((state) => state.orderDeliver)
+  const {loading:loadingDeliver,success: successDeliver} = orderDeliver
 
   if(!loading){
     const addDecimals = (number) =>{
@@ -34,6 +40,11 @@ const OrderScreen = () => {
     
   }
  useEffect(() =>{
+    //If user is not logged in redirect
+    if(!userInfo){
+        navigate('/login')
+    }
+
     //Paypal script
     const addPayPalScript = async()=>{
         const {data:clientId} = await axios.get('/api/config/paypal')
@@ -47,10 +58,13 @@ const OrderScreen = () => {
         }
         document.body.appendChild(script)
     }
-    if(!order || successPay){
+    if(!order || successPay || successDeliver){
         //Prevents infite loop after Payment(stop refreshing)
         dispatch({
             type: ORDER_PAY_RESET
+        })
+        dispatch({
+            type: ORDER_DELIVER_RESET
         })
         dispatch(getOrderDetails(id))
     }else if(!order.isPaid){
@@ -61,12 +75,15 @@ const OrderScreen = () => {
             setSdkReady(true)
         }
     }
-},[dispatch,id,successPay,order])
+},[dispatch,id,successPay,order,successDeliver,navigate,userInfo])
 
 //On submit fetching paypal Payment
 const successPaymentHandler = (paymentResult) =>{
     console.log(paymentResult)
     dispatch(payOrder(id,paymentResult))
+}
+const deliverHandler = () =>{
+    dispatch(deliverOrder(order))
 }
 
   return loading ? <Loader /> : error ? 
@@ -182,7 +199,18 @@ const successPaymentHandler = (paymentResult) =>{
                                 )}
                             </ListGroup.Item>
                         )}
-
+                        
+                        {loadingDeliver && <Loader />}
+                        {userInfo && userInfo.isAdmin && order.isPaid && !order.isDelivered &&(
+                            <ListGroup.Item>
+                                <Button 
+                                 
+                                className='btn btn-block'
+                                onClick={deliverHandler}>
+                                    Mark as Delivered
+                                </Button>
+                            </ListGroup.Item>
+                        )}
                     </ListGroup>
                  </Card>
               </Col>

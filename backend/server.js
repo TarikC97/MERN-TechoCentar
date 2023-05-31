@@ -8,12 +8,18 @@ import productRouters from './routes/productRoutes.js'
 import userRoutes from './routes/userRoutes.js'
 import orderRoutes from './routes/orderRoutes.js'
 import uploadRoutes from './routes/uploadRoutes.js'
+import morgan from 'morgan'
 
 dotenv.config()
 
 connectDB()
 
 const app = express()
+
+//Morgan - Console logs route ,status and time.
+if(process.env.NODE_ENV === 'development'){
+    app.use(morgan('dev'))
+}
 
 //Middleware for fetching user from postman
 app.use(express.json())
