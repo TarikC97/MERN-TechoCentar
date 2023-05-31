@@ -25,7 +25,7 @@ app.get('/',(req,res)=>{
 app.use('/api/products', productRouters)
 app.use('/api/users', userRoutes)
 app.use('/api/orders',orderRoutes)
-app.use('/api/uploads',uploadRoutes)
+app.use('/api/upload',uploadRoutes)
 
 //Making upload folder static so it can get loaded in Browser
 const __dirname = path.resolve()

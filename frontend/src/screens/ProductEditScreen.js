@@ -59,30 +59,30 @@ const ProductEditScreen = () => {
               setDescription(product.description)
           }
     }
-  },[dispatch,product,id,successUpdate])
+  },[dispatch,product,id,successUpdate,navigate])
 
   const uploadFileHandler = async (e) =>{
     //.files(array) - files[0] upload one img only
-    const file = e.target.files[0]
-    const formData = new FormData()
-    //image , backend name
-    formData.append('image',file)
-    setUploading(true)
-    try {
-      const config = {
-        headers:{
-          'Content-Type':'multipart/form-data'
-        }
-      }
-      const {data} = await axios.post('/api/upload',formData,config)
-      //setImage(path)
-      setImage(data)
-      setUploading(false)
-    } catch (error) {
-        console.error(error)
-        setUploading(false)
-    }
-  }
+     const file = e.target.files[0]
+     const formData = new FormData()
+     //image , backend name
+     formData.append('image',file)
+     setUploading(true)
+     try {
+       const config = {
+         headers:{
+           'Content-Type':'multipart/form-data'
+         }
+       }
+       const {data} = await axios.post('/api/upload',formData,config)
+       //setImage(path)
+       setImage(data)
+       setUploading(false)
+     } catch (error) {
+         console.error(error)
+         setUploading(false)
+   }
+}
 
   const submitHandler = (e) =>{
     //So the page doesnt refresh
@@ -128,7 +128,7 @@ const ProductEditScreen = () => {
                 ></Form.Control>
               </Form.Group>
 
-              <Form.Group controlId='image'>
+            <Form.Group controlId='image'>
               <Form.Label>Image</Form.Label>
                 <Form.Control type='text' 
                 placeholder='Enter image url' 
@@ -136,11 +136,11 @@ const ProductEditScreen = () => {
                 onChange={(e)=>setImage(e.target.value)}
                 >
                 </Form.Control>
-                <Form.File 
-                id='image-file' 
+               <Form.Control
+                type='file'
+                // id='image-file' 
                 label='Choose File'
-                custom onChange={uploadFileHandler}>
-                </Form.File>
+                onChange={uploadFileHandler}></Form.Control>
                 {uploading && <Loader />}
               </Form.Group>
 
