@@ -13,7 +13,10 @@ import {
     PRODUCT_CREATE_FAIL,
     PRODUCT_UPDATE_SUCCESS,
     PRODUCT_UPDATE_FAIL,
-    PRODUCT_UPDATE_REQUEST
+    PRODUCT_UPDATE_REQUEST,
+    PRODUCT_CREATE_REVIEW_FAIL,
+    PRODUCT_CREATE_REVIEW_SUCCESS,
+    PRODUCT_CREATE_REVIEW_REQUEST
 } from '../constants/productConstants'
 import axios from 'axios'
 //Action for list of products
@@ -157,6 +160,42 @@ export const updateProduct = (product) => async(dispatch,getState) =>{
     } catch (error) {
         dispatch({
             type: PRODUCT_UPDATE_FAIL,
+            payload: error.response && 
+                error.response.data.message ? error.response.data.message :
+                error.message
+        })
+    }
+}
+
+//We need getState to get token from user.
+//Product ID, object review(rating,comment)
+export const createProductReview = (productId,review) => async(dispatch,getState) =>{
+    try {
+        dispatch({
+            type: PRODUCT_CREATE_REVIEW_REQUEST
+        })
+
+        const {userLogin:{userInfo}} = getState()
+
+        //When we are sending data arguments(id) we need in headers:
+        //content-type app/json
+        const config = {
+            headers:{
+                'Content-Type':'application/json',
+                Authorization: `Bearer ${userInfo.token}`
+            }
+        }
+        //Making request in the headers.
+        //{} - Post request but not sending data.
+         await axios.post(`/api/products/${productId}/reviews`,review,config)
+
+        //Getting user data
+        dispatch({
+            type: PRODUCT_CREATE_REVIEW_SUCCESS,
+        })
+    } catch (error) {
+        dispatch({
+            type: PRODUCT_CREATE_REVIEW_FAIL,
             payload: error.response && 
                 error.response.data.message ? error.response.data.message :
                 error.message
