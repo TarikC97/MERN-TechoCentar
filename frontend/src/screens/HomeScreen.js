@@ -5,9 +5,11 @@ import Product from '../components/Product'
 import { listProducts } from '../actions/productActions'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
+import { useParams } from 'react-router-dom'
 
 const HomeScreen = () => {
 
+const {keyword} = useParams()
 const dispatch = useDispatch()
 //Same name as reducer in store.js
 //useSelector used for displaying data
@@ -17,8 +19,8 @@ const {loading,error,products} = productList
 
 useEffect(() => {
   //Fetching data from server using Action.
-  dispatch(listProducts())
-}, [dispatch])
+  dispatch(listProducts(keyword))
+}, [dispatch,keyword])
 
 
   return (

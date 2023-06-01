@@ -4,11 +4,13 @@ import {LinkContainer} from 'react-router-bootstrap'
 import {Container, NavDropdown} from 'react-bootstrap'
 import {Navbar,Nav} from 'react-bootstrap'
 import {logout} from '../actions/userActions'
-
+import SearchBox from './SearchBox'
+import { useNavigate } from 'react-router-dom'
 
 const Header = () => {
 
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const userLogin = useSelector(state=>state.userLogin)
   const {userInfo} = userLogin
@@ -16,6 +18,7 @@ const Header = () => {
 
   const logoutHandler = () =>{
     dispatch(logout())
+    navigate('/login')
   }
 
   return (
@@ -27,6 +30,7 @@ const Header = () => {
         </LinkContainer>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
+          <SearchBox />
           <Nav className="ml-auto">
            <LinkContainer to='/cart'>
              <Nav.Link>

@@ -20,12 +20,12 @@ import {
 } from '../constants/productConstants'
 import axios from 'axios'
 //Action for list of products
-export const listProducts = () => async(dispatch)=>{
+export const listProducts = (keyword='') => async(dispatch)=>{
     //Action(dispatch) = > Reducer
     try {
         dispatch({type:PRODUCT_LIST_REQUEST})
         //Sending request to server.
-        const {data} = await axios.get('/api/products')
+        const {data} = await axios.get(`/api/products?keyword=${keyword}`)
          //Server response with data through payload
         dispatch({
             type: PRODUCT_LIST_SUCCESS,

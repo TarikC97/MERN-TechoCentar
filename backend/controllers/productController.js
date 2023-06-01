@@ -7,8 +7,20 @@ import Product from '../models/productModel.js'
 //@description Fetch all products
 //@route GET /api/products
 //@access Public
+//?=... - query => req.query.keyword 
 const getProducts = asyncHandler(async(req,res)=>{
-    const products = await Product.find({})
+    const keyword = req.query.keyword ?{
+        //Mathching keyword to the name of product
+        name: {
+            //Without regex we need to search for whole name.
+            //Needed regex to get product by:
+            //typing one or more letter of product.
+            $regex: req.query.keyword,
+            $options: 'i'//Case incentitive
+        }
+    } :{}
+
+    const products = await Product.find({...keyword})
     //throw new Error('Some Error')
     res.json(products)
 })

@@ -33,7 +33,7 @@ const OrderListScreen = () => {
         navigate('/login')
     }
     
-  },[dispatch,navigate])
+  },[dispatch,navigate,userInfo])
 
   return (
     <> 
