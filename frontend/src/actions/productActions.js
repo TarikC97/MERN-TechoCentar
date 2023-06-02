@@ -20,12 +20,13 @@ import {
 } from '../constants/productConstants'
 import axios from 'axios'
 //Action for list of products
-export const listProducts = (keyword='') => async(dispatch)=>{
+export const listProducts = (keyword='',pageNumber='') => async(dispatch)=>{
     //Action(dispatch) = > Reducer
     try {
         dispatch({type:PRODUCT_LIST_REQUEST})
         //Sending request to server.
-        const {data} = await axios.get(`/api/products?keyword=${keyword}`)
+        //Two ? then we use & for second el.
+        const {data} = await axios.get(`/api/products?keyword=${keyword}&pageNumber=${pageNumber}`)
          //Server response with data through payload
         dispatch({
             type: PRODUCT_LIST_SUCCESS,

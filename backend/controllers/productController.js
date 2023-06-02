@@ -9,6 +9,10 @@ import Product from '../models/productModel.js'
 //@access Public
 //?=... - query => req.query.keyword 
 const getProducts = asyncHandler(async(req,res)=>{
+    //Homescreen Slider - Pagination
+    //PageSize - 2Product per page
+    const pageSize = 4
+    const page = Number(req.query.pageNumber) || 1
     const keyword = req.query.keyword ?{
         //Mathching keyword to the name of product
         name: {
@@ -20,9 +24,12 @@ const getProducts = asyncHandler(async(req,res)=>{
         }
     } :{}
 
+    const count = await Product.countDocuments({...keyword})
     const products = await Product.find({...keyword})
+                          .limit(pageSize)
+                          .skip(pageSize*(page-1))
     //throw new Error('Some Error')
-    res.json(products)
+    res.json({products,page,pages: Math.ceil(count/pageSize)})
 })
 
 //@description Fetch single product
