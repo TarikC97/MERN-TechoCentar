@@ -7,6 +7,7 @@ import Message from '../components/Message'
 import Loader from '../components/Loader'
 import { getUserDetails,updateUserProfile } from '../actions/userActions'
 import { listMyOrders} from '../actions/orderActions'
+import { USER_UPDATE_PROFILE_RESET } from '../constants/userConstants'
 
 const ProfileScreen = () => {
 
@@ -40,7 +41,8 @@ const ProfileScreen = () => {
     }
     else{
         //If user is logged in, and name is not changed
-        if(!user.name){
+        if(!user || !user.name || success){
+            dispatch({ type: USER_UPDATE_PROFILE_RESET })
             //Profile is passed as id,
             //If Profile of that user is not changed
             //Display the profile.
@@ -53,7 +55,7 @@ const ProfileScreen = () => {
             setEmail(user.email)
         }
     }
-  },[navigate,dispatch,userInfo,user])
+  },[navigate,dispatch,userInfo,user,success])
 
 
   const submitHandler = (e) =>{

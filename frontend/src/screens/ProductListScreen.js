@@ -41,7 +41,7 @@ const ProductListScreen = () => {
     dispatch({type: PRODUCT_CREATE_RESET})
 
     //If user logged in is not Admin redirect
-    if(!userInfo.isAdmin){
+    if(!userInfo || !userInfo.isAdmin){
         navigate('/login')
     }
     //If product is created then redirect

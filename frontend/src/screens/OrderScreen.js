@@ -1,6 +1,6 @@
 import React,{useEffect,useState} from 'react'
 import {useNavigate,Link,useParams} from 'react-router-dom'
-import {Button,Row,Card,Col,ListGroup,Image,ListGroupItem} from 'react-bootstrap'
+import {Button,Row,Card,Col,ListGroup,Image} from 'react-bootstrap'
 import { useDispatch,useSelector} from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
@@ -58,7 +58,7 @@ const OrderScreen = () => {
         }
         document.body.appendChild(script)
     }
-    if(!order || successPay || successDeliver){
+    if(!order || successPay || successDeliver || order._id !== id){
         //Prevents infite loop after Payment(stop refreshing)
         dispatch({
             type: ORDER_PAY_RESET

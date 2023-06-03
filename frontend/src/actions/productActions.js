@@ -22,6 +22,7 @@ import {
     PRODUCT_TOP_FAIL
 } from '../constants/productConstants'
 import axios from 'axios'
+import {logout} from './userActions'
 
 //Action for list of products
 export const listProducts = (keyword='',pageNumber='') => async(dispatch)=>{
@@ -157,18 +158,27 @@ export const updateProduct = (product) => async(dispatch,getState) =>{
         //{} - Post request but not sending data.
         const {data} = await axios.put(`/api/products/${product._id}`,product,config)
 
-        //Getting user data
+        //Getting data
         dispatch({
             type: PRODUCT_UPDATE_SUCCESS,
             payload: data
         })
-    } catch (error) {
-        dispatch({
-            type: PRODUCT_UPDATE_FAIL,
-            payload: error.response && 
-                error.response.data.message ? error.response.data.message :
-                error.message
+        dispatch({ 
+            type: PRODUCT_DETAILS_SUCCESS, 
+            payload: data 
         })
+    } catch (error) {
+        const message =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+        if (message === 'Not authorized, token failed') {
+             dispatch(logout())
+            }
+      dispatch({
+        type: PRODUCT_UPDATE_FAIL,
+        payload: message,
+      })
     }
 }
 
@@ -199,11 +209,16 @@ export const createProductReview = (productId,review) => async(dispatch,getState
             type: PRODUCT_CREATE_REVIEW_SUCCESS,
         })
     } catch (error) {
+      const message =
+        error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message
+        if (message === 'Not authorized, token failed') {
+        dispatch(logout())
+        }
         dispatch({
-            type: PRODUCT_CREATE_REVIEW_FAIL,
-            payload: error.response && 
-                error.response.data.message ? error.response.data.message :
-                error.message
+        type: PRODUCT_CREATE_REVIEW_FAIL,
+        payload: message,
         })
     }
 }
