@@ -16,21 +16,18 @@ const RegisterScreen = () => {
   const [confirmPassword,setConfirmPassword] = useState('')
   const [message,setMessage] = useState(null)
 
-  const navigate = useNavigate()
-  const { search } = useLocation();
-  const searchparam = new URLSearchParams(search);
-  const redirect = searchparam.get('redirect') || '/';
-
   const dispatch = useDispatch()
 
   const userRegister = useSelector(state =>state.userRegister)
   const {loading,error,userInfo} = userRegister
 
+  const navigate = useNavigate()
+
   useEffect(()=>{
     if(userInfo){
-      navigate(redirect)
+      navigate('/login')
     }
-  },[navigate,redirect,userInfo])
+  },[navigate,userInfo])
 
 
   const submitHandler = (e) =>{
@@ -90,7 +87,7 @@ const RegisterScreen = () => {
         </Form>
         <Row className='py-3'>
             <Col>
-              Have an Account? <Link to={redirect ?`/login/?redirect=${redirect}`:'/login'}>Log In here!</Link>
+              Have an Account? <Link to={'/login'}>Log In here!</Link>
             </Col>
         </Row>
     </FormContainer>

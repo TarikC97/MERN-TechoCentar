@@ -46,7 +46,7 @@ export const listProducts = (keyword='',pageNumber='') => async(dispatch)=>{
             dispatch(logout())
         }
         dispatch({
-            type: PRODUCT_DELETE_FAIL,
+            type: PRODUCT_LIST_FAIL,
             payload: message,   
         })
     }

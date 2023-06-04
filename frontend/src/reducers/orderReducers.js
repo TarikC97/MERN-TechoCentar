@@ -21,6 +21,9 @@ ORDER_DELIVER_SUCCESS,
 ORDER_DELIVER_FAIL,
 ORDER_DELIVER_RESET,
 ORDER_CREATE_RESET,
+ORDER_DELETE_REQUEST,
+ORDER_DELETE_SUCCESS,
+ORDER_DELETE_FAIL,
 } from '../constants/orderConstants'
 
 export const orderCreateReducer = (state={},action) =>{
@@ -152,6 +155,27 @@ export const OrderListReducer = (state={orders:[]},action) =>{
             }
         case ORDER_LIST_FAIL:
            return{
+                loading: false,
+                error: action.payload,
+            }
+        default:
+            return state
+    }
+}
+
+export const orderDeleteReducer = (state={},action) =>{
+    switch(action.type){
+        case ORDER_DELETE_REQUEST:
+            return{
+                loading: true
+            }
+        case ORDER_DELETE_SUCCESS:
+            return{
+                loading: false,
+                success: true,
+            }
+        case ORDER_DELETE_FAIL:
+            return{
                 loading: false,
                 error: action.payload,
             }

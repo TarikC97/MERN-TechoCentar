@@ -77,10 +77,10 @@ export const register = (name,email,password) => async(dispatch) =>{
             payload: data
         })
         //Login user, as he's register
-        dispatch({
-            type: USER_LOGIN_SUCCESS,
-            payload: data
-        })
+        // dispatch({
+        //     type: USER_LOGIN_SUCCESS,
+        //     payload: data
+        // })
         //Saving user in localStorage
         localStorage.setItem('userInfo',JSON.stringify(data))
 

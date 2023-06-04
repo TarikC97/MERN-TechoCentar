@@ -4,8 +4,8 @@ import {Table,Button} from 'react-bootstrap'
 import { useDispatch,useSelector} from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
-import {listOrders} from '../actions/orderActions'
-import {useNavigate} from 'react-router-dom'
+import {listOrders,deleteOrder} from '../actions/orderActions'
+import {useNavigate, useParams} from 'react-router-dom'
 
 
 
@@ -13,12 +13,19 @@ const OrderListScreen = () => {
 
   const navigate = useNavigate()  
   const dispatch = useDispatch()
+  const {id} =useParams()
 
   const orderList = useSelector(state=>state.orderList)
   const {loading:loadingOrder,orders,error:errorOrder} = orderList
 
   const userLogin = useSelector(state=>state.userLogin)
   const {userInfo} = userLogin
+
+  const orderDelete = useSelector(state=>state.orderDelete)
+  const {
+        loading:loadingDelete,
+        success:successDelete,
+        error:errorDelete   } =orderDelete
 
 //   const userList = useSelector(state=>state.userList)
 //   const {loading,error,users} = userList
@@ -33,11 +40,19 @@ const OrderListScreen = () => {
         navigate('/login')
     }
     
-  },[dispatch,navigate,userInfo])
+  },[dispatch,navigate,userInfo,successDelete])
+  
+  const deleteHandler = (id)=>{
+    if(window.confirm('Are you sure?')){
+        dispatch(deleteOrder(id))
+    }
+  }
 
   return (
     <> 
       <h1>Orders</h1>
+    {loadingDelete && <Loader />}
+    {errorDelete && <Message variant='danger'>{errorDelete}</Message> }
     {loadingOrder ? <Loader /> : errorOrder ? <Message variant='danger'>{errorOrder}</Message>:
     (
         <Table striped bordered hover responsive className='table-sm'>
@@ -81,6 +96,13 @@ const OrderListScreen = () => {
                                     Details
                                 </Button>
                             </LinkContainer>
+                        </td>
+                        <td>
+                            <Button variant='danger' 
+                                className='btn-sm'
+                                onClick={()=>deleteHandler(order._id)}>
+                                    <i className='fas fa-trash'></i>
+                             </Button>
                         </td>
                     </tr>
                 ))}
