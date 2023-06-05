@@ -17,9 +17,9 @@ connectDB()
 const app = express()
 
 //Morgan - Console logs route ,status and time.
-if(process.env.NODE_ENV === 'development'){
-    app.use(morgan('dev'))
-}
+// if(process.env.NODE_ENV === 'development'){
+//     app.use(morgan('dev'))
+// }
 
 //Middleware for fetching user from postman
 app.use(express.json())
@@ -38,18 +38,18 @@ app.use('/uploads',express.static(path.join(__dirname,'/uploads')))
 app.get('/api/config/paypal',(req,res)=> res.send(process.env.PAYPAL_CLIENT_ID))
 
 //Production side
-if(process.env.NODE_ENV === 'production'){
+// if(process.env.NODE_ENV === 'production'){
     //Setting frontend/build/index.html as static folder
     app.use(express.static(path.join(__dirname,'/frontend/build')))
     //Getting anything except api routes above
     app.get('*',(req,res)=> res.sendFile(path.resolve
         (__dirname,'frontend','build','index.html')))
-}
-else{
-    app.get('/',(req,res)=>{
-        res.send('API is running...')
-    })
-}
+//}
+// else{
+//     app.get('/',(req,res)=>{
+//         res.send('API is running...')
+//     })
+// }
 //Middleware for 404 errors
 app.use(notFound)
 //Middleware for errors handlers

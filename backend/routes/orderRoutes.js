@@ -5,7 +5,6 @@ import {protect,admin} from '../middleware/authMiddleware.js'
 const router = express.Router()
 
 //After order returns to api/orders
-
 //Protect - Needed for safe user auth(token)(/orders)
 router.route('/')
 .post(protect, addOrderItems)
