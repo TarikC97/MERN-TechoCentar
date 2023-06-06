@@ -50,7 +50,7 @@ const registerUser = asyncHandler(async(req,res)=>{
       name,
       email,
       //Hashing pw in userModel
-      password
+      password,
   })
   //if user is created,display data
   if(user){

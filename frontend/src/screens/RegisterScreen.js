@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react'
-import {Link,useLocation, useNavigate} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import {Form,Button,Row,Col} from 'react-bootstrap'
 import { useDispatch,useSelector} from 'react-redux'
 import Message from '../components/Message'
@@ -80,7 +80,6 @@ const RegisterScreen = () => {
             onChange={(e)=>setConfirmPassword(e.target.value)}
             ></Form.Control>
           </Form.Group>
-          
           <Button type='submit' variant='primary'>
             Register
           </Button>
