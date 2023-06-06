@@ -9,6 +9,12 @@ node_modules/
 # testing
 /coverage
 
+#Documents
+Express-JS
+Express-MongoDB
+React-Express
+REACT-JS
+
 # production
 # /frontend/build
 

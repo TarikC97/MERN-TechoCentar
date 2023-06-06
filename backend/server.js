@@ -45,11 +45,11 @@ app.get('/api/config/paypal',(req,res)=> res.send(process.env.PAYPAL_CLIENT_ID))
     app.get('*',(req,res)=> res.sendFile(path.resolve
         (__dirname,'frontend','build','index.html')))
 }
-// else{
-//     app.get('/',(req,res)=>{
-//         res.send('API is running...')
-//     })
-// }
+else{
+     app.get('/',(req,res)=>{
+         res.send('API is running...')
+     })
+}
 //Middleware for 404 errors
 app.use(notFound)
 //Middleware for errors handlers
