@@ -10,7 +10,7 @@ import Product from '../models/productModel.js'
 //?=... - query => req.query.keyword 
 const getProducts = asyncHandler(async(req,res)=>{
     //Homescreen Slider - Pagination
-    //PageSize - 2Product per page
+    //PageSize - 4Product per page
     const pageSize = 4
     const page = Number(req.query.pageNumber) || 1
     const keyword = req.query.keyword ?{
