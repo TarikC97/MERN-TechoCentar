@@ -28,6 +28,21 @@ const authUser = asyncHandler(async(req,res)=>{
       res.status(401)
       throw new Error('Invalid email or password')
    }
+   //If user is not verified send link to email again.
+   if(!user.verified){
+      let mail_token = await mailToken.findOne({userId:user._id})
+      if(!mail_token){
+         mail_token = await mailToken.create({
+            userId: user._id,
+            mailToken: crypto.randomBytes(32).toString("hex")
+           }).save()
+           const url = `${proccess.env.BASE_URL}users/${user._id}/verify/${mail_token}`
+           await sendEmail(user.email,"Verify Email",url)
+      }
+      return res.status(400).send({
+         message:"An Email is sent, please verify your Account!"
+      })
+   }
    // //Sending response 
    // res.send({
    //    email,
@@ -57,7 +72,7 @@ const registerUser = asyncHandler(async(req,res)=>{
   })
   //After creating user, userId(from Token Colletion) takes
   //id of new user, and we generate random token.
-  const mail_token = await new mailToken({
+  const mail_token = await mailToken.create({
    userId: user._id,
    mailToken: crypto.randomBytes(32).toString("hex")
   }).save()
@@ -81,7 +96,28 @@ const registerUser = asyncHandler(async(req,res)=>{
 
   }
 })
+//Verify user in db
 const verifyUser = asyncHandler(async(req,res)=>{
+   try {
+      const user = await User.findOne({_id:req.params.id})
+      if(!user){
+         return res.status(400).send({message:"Invalid link"})
+      }
+      const mail_token = await mailToken.findOne({
+         userId: user._id,
+         mailToken:req.params.token
+      })
+      if(!mail_token){
+         return res.status(400).send({message:"invalid link"})
+      }
+      await User.updateOne({_id:user._id,verified:true})
+      await mailToken.deleteOne({mailToken:mail_token})
+
+      res.status(200).send({message:"Email verified successfully!"})
+
+   } catch (error) {
+      res.status(500).send({message:"Internal Server Error"})
+   }
 
 })
 
