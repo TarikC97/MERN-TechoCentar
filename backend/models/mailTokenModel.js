@@ -1,9 +1,8 @@
 import mongoose from "mongoose";
-const Schema = mongoose.Schema
 
-const mailTokenSchema = new Schema({
+const mailTokenSchema = mongoose.Schema({
     userId:{
-        type:Schema.Types.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         required:true,
         ref:"User",
         unique: true,

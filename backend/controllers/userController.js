@@ -205,12 +205,12 @@ const updateUser = asyncHandler(async(req,res)=>{
 })
 export {
    authUser,
-   registerUser, 
+   registerUser,
+   verifyUser, 
    getUserProfile,
    updateUserProfile,
    getUsers,
    deleteUser,
    getUserById,
    updateUser,
-   verifyUser,
 }
