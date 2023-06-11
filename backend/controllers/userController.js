@@ -1,6 +1,9 @@
 import asyncHandler from 'express-async-handler'
 import User from '../models/userModel.js'
 import generateToken from '../utils/generateToken.js'
+import mailToken from '../models/mailTokenModel.js'
+import generateEmail from '../utils/generateEmail.js'
+import crypto from 'crypto'
 
 
 //@description Auth user & get token
@@ -52,14 +55,24 @@ const registerUser = asyncHandler(async(req,res)=>{
       //Hashing pw in userModel
       password,
   })
+  //After creating user, userId(from Token Colletion) takes
+  //id of new user, and we generate random token.
+  const mail_token = await new mailToken({
+   userId: user._id,
+   mailToken: crypto.randomBytes(32).toString("hex")
+  }).save()
+  const url = `${proccess.env.BASE_URL}users/${user._id}/verify/${mail_token}`
+  await sendEmail(user.email,"Verify Email",url)
+
   //if user is created,display data
   if(user){
       res.status(201).json({
-         _id: user._id,
-         name: user.name,
-         email: user.email,
-         isAdmin: user.isAdmin,
-         token: generateToken(user._id)
+         // _id: user._id,
+         // name: user.name,
+         // email: user.email,
+         // isAdmin: user.isAdmin,
+         // token: generateToken(user._id)
+         message:"An Email has been sent, please Verify your Email."
       })
   }
   else{
@@ -68,6 +81,10 @@ const registerUser = asyncHandler(async(req,res)=>{
 
   }
 })
+const verifyUser = asyncHandler(async(req,res)=>{
+
+})
+
 
 //@description Get user profile
 //@route Get/api/users/profile
@@ -186,7 +203,6 @@ const updateUser = asyncHandler(async(req,res)=>{
       throw new Error('User not found')
    }
 })
-
 export {
    authUser,
    registerUser, 
@@ -196,4 +212,5 @@ export {
    deleteUser,
    getUserById,
    updateUser,
+   verifyUser,
 }
