@@ -1,10 +1,12 @@
 import asyncHandler from 'express-async-handler'
 import User from '../models/userModel.js'
 import generateToken from '../utils/generateToken.js'
-import mailToken from '../models/mailTokenModel.js'
-import generateEmail from '../utils/generateEmail.js'
-import crypto from 'crypto'
+import bcrypt from 'bcryptjs'
+import UserOTPVerification from '../models/userOTPVerification.js'
+import nodemailer from 'nodemailer'
+import dotenv from 'dotenv'
 
+dotenv.config()
 
 //@description Auth user & get token
 //@route POST/api/users/login
@@ -27,28 +29,6 @@ const authUser = asyncHandler(async(req,res)=>{
    else{
       res.status(401)
       throw new Error('Invalid email or password')
-   }
-   //If user is not verified send link to email again.
-   if(!user.verified){
-      let mail_token = await mailToken.findOne({userId:user._id})
-      if(!mail_token){
-         mail_token = await mailToken.create({
-            userId: user._id,
-            mailToken: crypto.randomBytes(32).toString("hex")
-           })
-           //const newToken = await mail_token.save()
-
-           const url = `http://localhost:3000/api/users/${user._id}/verify/${mail_token.mailToken}`
-           await generateEmail(user.email,"Verify Email",url)
-
-           res.status(201).send(
-            {
-               message:"An Email is sent, please verify your Account!"
-            })
-      }
-      return res.status(400).send({
-         message:"An Email is sent, please verify your Account!"
-      })
    }
    // //Sending response 
    // res.send({
@@ -77,26 +57,17 @@ const registerUser = asyncHandler(async(req,res)=>{
       //Hashing pw in userModel
       password,
   })
-  //After creating user, userId(from Token Colletion) takes
-  //id of new user, and we generate random token.
-  const mail_token = await mailToken.create({
-   userId: user._id,
-   mailToken: crypto.randomBytes(32).toString("hex")
-  })
-   //const newToken = await mail_token.save()
-  const url = `http://localhost:3000/api/users/${user._id}/verify/${mail_token.mailToken}`
-  await generateEmail(user.email,"Verify Email",url)
-
   //if user is created,display data
   if(user){
-      res.status(201).send({
-         // _id: user._id,
-         // name: user.name,
-         // email: user.email,
-         // isAdmin: user.isAdmin,
-         // token: generateToken(user._id)
-         message:"An Email has been sent, please Verify your Email."
-      })
+   sendOTPVerificationEmail(user,res)
+   // res.status(201).json({
+   //    // _id: user._id,
+   //    // name: user.name,
+   //    // email: user.email,
+   //    // isAdmin: user.isAdmin,
+   //    // token: generateToken(user._id)
+     
+   // })
   }
   else{
    res.status(400)
@@ -104,30 +75,59 @@ const registerUser = asyncHandler(async(req,res)=>{
 
   }
 })
-//Verify user in db
-const verifyUser = asyncHandler(async(req,res)=>{
-   try {
-      const user = await User.findOne({_id:req.params.id})
-      if(!user){
-         return res.status(400).send({message:"Invalid link"})
-      }
-      const mail_token = await mailToken.findOne({
-         userId: user._id,
-         mailToken:req.params.token
-      })
-      if(!mail_token){
-         return res.status(400).send({message:"invalid link"})
-      }
-      await User.updateOne({_id:user._id,verified:true})
-      // await mailToken.deleteOne({mailToken:mail_token})
-      res.status(200).send({message:"Email verified successfully!"})
 
+let transporter = nodemailer.createTransport({
+   host:"smtp.gmail.com",
+   secure: true,
+   auth:{
+      user:process.env.USER,
+      pass:process.env.PASS,
+   }
+})
+//Veryfing user through OTP
+const sendOTPVerificationEmail = async({_id,email},res)=>{
+   try {
+      //Generating 4 random numbers
+      //Between 1000-9999,floor avoid decimals.
+      const otp = `${Math.floor(Math.random()*9000)}`
+
+      const mailOptions = {
+         from: process.env.USER,
+         to: email,
+         subject:"Verify Your Email",
+         html:`<p>Enter <b>${otp}</b> in the app to verify your Email.
+               </p><p>This code <b> expires in 1 hour.</p>`
+      }
+
+      //Has otp code
+      const saltRounds = 10
+      const hashedOTP = await bcrypt.hash(otp,saltRounds)
+
+      const newOTPVerifciation = await UserOTPVerification.create({
+         userId: _id,
+         otp: hashedOTP,
+         //Hashing pw in userModel
+         createdAt: Date.now(),
+         expiresAt: Date.now()*360000,
+     })
+     await newOTPVerifciation.save()
+     await transporter.sendMail(mailOptions)
+     res.status(201).json({
+      status:"PENDING",
+      message:"Verification otp mail sent",
+      data:{
+         userId: _id,
+         email,
+         }
+     })
    } catch (error) {
-      res.status(500).send({message:"Internal Server Error"})
+      res.json({
+         status:"FAILED",
+         message: error.message,
+      })
    }
 
-})
-
+}
 
 //@description Get user profile
 //@route Get/api/users/profile
@@ -249,7 +249,7 @@ const updateUser = asyncHandler(async(req,res)=>{
 export {
    authUser,
    registerUser,
-   verifyUser, 
+   sendOTPVerificationEmail, 
    getUserProfile,
    updateUserProfile,
    getUsers,

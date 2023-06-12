@@ -1,21 +1,22 @@
 import mongoose from "mongoose";
 
-const mailTokenSchema = mongoose.Schema({
+const UserOTPVerificationSchema = mongoose.Schema({
     userId:{
         type:mongoose.Schema.Types.ObjectId,
         required:true,
         ref:"User",
         unique: true,
     },
-    mailToken:{
+    otp:{
         type: String,
         required:true,
     },
     createdAt:{
         type:Date,
-        default:Date.now(),
-        expiresIn: '200d'
+    },
+    expiresAt:{
+        type:Date,
     }
 })
-const mailToken = mongoose.model('mailToken',mailTokenSchema)
-export default mailToken
+const UserOTPVerification = mongoose.model('UserOTPVerification',UserOTPVerificationSchema)
+export default UserOTPVerification
