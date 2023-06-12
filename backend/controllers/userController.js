@@ -35,9 +35,16 @@ const authUser = asyncHandler(async(req,res)=>{
          mail_token = await mailToken.create({
             userId: user._id,
             mailToken: crypto.randomBytes(32).toString("hex")
-           }).save()
-           const url = `${proccess.env.BASE_URL}users/${user._id}/verify/${mail_token}`
-           await sendEmail(user.email,"Verify Email",url)
+           })
+           //const newToken = await mail_token.save()
+
+           const url = `http://localhost:3000/api/users/${user._id}/verify/${mail_token.mailToken}`
+           await generateEmail(user.email,"Verify Email",url)
+
+           res.status(201).send(
+            {
+               message:"An Email is sent, please verify your Account!"
+            })
       }
       return res.status(400).send({
          message:"An Email is sent, please verify your Account!"
@@ -75,13 +82,14 @@ const registerUser = asyncHandler(async(req,res)=>{
   const mail_token = await mailToken.create({
    userId: user._id,
    mailToken: crypto.randomBytes(32).toString("hex")
-  }).save()
-  const url = `${proccess.env.BASE_URL}users/${user._id}/verify/${mail_token}`
-  await sendEmail(user.email,"Verify Email",url)
+  })
+   //const newToken = await mail_token.save()
+  const url = `http://localhost:3000/api/users/${user._id}/verify/${mail_token.mailToken}`
+  await generateEmail(user.email,"Verify Email",url)
 
   //if user is created,display data
   if(user){
-      res.status(201).json({
+      res.status(201).send({
          // _id: user._id,
          // name: user.name,
          // email: user.email,
@@ -111,8 +119,7 @@ const verifyUser = asyncHandler(async(req,res)=>{
          return res.status(400).send({message:"invalid link"})
       }
       await User.updateOne({_id:user._id,verified:true})
-      await mailToken.deleteOne({mailToken:mail_token})
-
+      // await mailToken.deleteOne({mailToken:mail_token})
       res.status(200).send({message:"Email verified successfully!"})
 
    } catch (error) {

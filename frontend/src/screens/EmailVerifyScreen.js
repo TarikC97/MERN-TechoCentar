@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 import {Link,useParams} from 'react-router-dom'
 import { useState,useEffect } from 'react'
-import success from '../../public/images/success'
+import success from '../success.png'
 import axios from 'axios'
 
 const EmailVerifyScreen = () => {
@@ -21,13 +21,13 @@ const EmailVerifyScreen = () => {
             setValidUrl(false)
         }
      }
-     verifyEmailUrl
+     verifyEmailUrl()
 },[param])
 
   return (
     <Fragment>
         {validUrl ?(
-            <div className='container'>
+            <div className='container-mail'>
                 <img 
                 src={success} 
                 alt="success_img"

@@ -17,9 +17,9 @@ connectDB()
 const app = express()
 
 //Morgan - Console logs route ,status and time.
-// if(process.env.NODE_ENV === 'development'){
-//     app.use(morgan('dev'))
-// }
+if(process.env.NODE_ENV === 'development'){
+     app.use(morgan('dev'))
+}
 
 //Middleware for fetching user from postman
 app.use(express.json())

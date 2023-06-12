@@ -25,7 +25,7 @@ const RegisterScreen = () => {
 
   useEffect(()=>{
     if(userInfo){
-      setMessage(res.message)
+      setMessage(message)
     }
   },[userInfo])
 
@@ -80,7 +80,7 @@ const RegisterScreen = () => {
             onChange={(e)=>setConfirmPassword(e.target.value)}
             ></Form.Control>
           </Form.Group>
-          {message && <div className="success-msg">{message}</div>}
+          {message && <Message variant='success'>{message}</Message>}
           <Button type='submit' variant='primary'>
             Register
           </Button>

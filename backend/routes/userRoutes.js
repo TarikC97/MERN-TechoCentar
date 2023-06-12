@@ -6,7 +6,7 @@ const router = express.Router()
 
 //Getting al users as ADMIn
 router.route('/').post(registerUser).get(protect,admin,getUsers)
-router.route('/:id/verify/:token').get(protect,verifyUser)
+router.route('/:id/verify/:token').get(verifyUser)
 router.post('/login',authUser)
 router.route('/profile').get(protect,getUserProfile).put(protect, updateUserProfile)
 //Admin deleting users,Admin getting user,Admin updating user
