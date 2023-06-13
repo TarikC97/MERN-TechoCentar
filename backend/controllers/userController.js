@@ -84,7 +84,7 @@ let transporter = nodemailer.createTransport({
       pass:process.env.PASS,
    }
 })
-//Veryfing user through OTP
+//Sending Mail to user.email created at form.
 const sendOTPVerificationEmail = async({_id,email},res)=>{
    try {
       //Generating 4 random numbers
@@ -126,6 +126,79 @@ const sendOTPVerificationEmail = async({_id,email},res)=>{
          message: error.message,
       })
    }
+}
+//Verifying user that received mail.
+const verifyEmail = async(req,res)=>{
+   try {
+      let { userId,otp} = req.body
+      if(!userId || !otp){
+         throw new Error("Empty otp details are not allowed")
+      }
+      else{
+         const UserOTPVerificationRecords = await UserOTPVerification.find({
+            userId
+         })
+         if(UserOTPVerificationRecords.length <=0){
+            //No record found
+            throw new Error("Account doesnt exist , or it has been already veified!")
+         }
+         else{
+            //otp record exists
+            const {expiresAt } = UserOTPVerificationRecords[0]
+            const hashedOTP = UserOTPVerificationRecords[0].otp
+            if(expiresAt < Date.now()){
+               //otp record has expired
+               await UserOTPVerificationRecords.deleteOne({userId})
+               throw new Error("Code has expired. Please request again!")
+            }
+            else{
+               //Compared received otp from db hashedOTP
+              const validOTP = await bcrypt.compare(otp,hashedOTP)
+              if(!validOTP){
+               //otp is wrong
+               throw new Error("Invalid code passed.")
+              }
+              else{
+               //success
+               await User.updateOne({_id:userId},{verified:true})
+               await UserOTPVerification.deleteOne({userId})
+               res.json({
+                  status: "VERIFIED",
+                  message:"User email verified successfully!"
+               })
+              }
+            }
+         }
+      }
+   } catch (error) {
+      res.json({
+         status:"FAILED",
+         message:error.message
+      })
+   }
+
+}
+//Resend email verification
+const resendEmail = async(req,res)=>{
+   try {
+      let{userId,email} = req.body
+
+      if(!userId || !email){
+         throw Error("Empty user details not allowed")
+      }
+      else{
+         //Delete existing record and resend
+         await User.updateOne({_id:userId},{verified:false})
+         await UserOTPVerification.deleteOne({userId})
+         sendOTPVerificationEmail({_id:userId,email},res)
+      }
+   } catch (error) {
+      res.json({
+         status:"FAILED",
+         message: error.message
+      })
+   }
+
 
 }
 
@@ -249,7 +322,9 @@ const updateUser = asyncHandler(async(req,res)=>{
 export {
    authUser,
    registerUser,
-   sendOTPVerificationEmail, 
+   sendOTPVerificationEmail,
+   verifyEmail,
+   resendEmail,
    getUserProfile,
    updateUserProfile,
    getUsers,
