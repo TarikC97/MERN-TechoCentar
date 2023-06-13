@@ -25,7 +25,7 @@ const RegisterScreen = () => {
 
   useEffect(()=>{
     if(userInfo){
-      setMessage(message)
+      navigate('/verify/:id')
     }
   },[userInfo])
 
@@ -80,7 +80,6 @@ const RegisterScreen = () => {
             onChange={(e)=>setConfirmPassword(e.target.value)}
             ></Form.Control>
           </Form.Group>
-          {message && <Message variant='success'>{message}</Message>}
           <Button type='submit' variant='primary'>
             Register
           </Button>
