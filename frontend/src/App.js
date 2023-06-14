@@ -34,7 +34,7 @@ const App = () => {
             <Route path='/profile' element={<ProfileScreen />}/>
             <Route path='/login' element={<LoginScreen />}/>
             <Route path='/register' element={<RegisterScreen />}/>
-            <Route path='/verify/:id' element={<VerifyEmailScreen />}/>
+            <Route path='/verify' element={<VerifyEmailScreen />}/>
             <Route path='/product/:id' element={<ProductScreen />}/>
             <Route path='/cart/:id?' element={<CartScreen />}/>
             <Route path='/admin/orderlist' element={<OrderListScreen />}/>

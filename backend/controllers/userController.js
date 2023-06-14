@@ -176,7 +176,6 @@ const verifyEmail = async(req,res)=>{
          message:error.message
       })
    }
-
 }
 //Resend email verification
 const resendEmail = async(req,res)=>{
@@ -198,8 +197,6 @@ const resendEmail = async(req,res)=>{
          message: error.message
       })
    }
-
-
 }
 
 //@description Get user profile

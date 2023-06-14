@@ -1,4 +1,4 @@
-import {USER_DELETE_FAIL, USER_DELETE_REQUEST, USER_DELETE_SUCCESS, USER_DETAILS_FAIL, USER_DETAILS_REQUEST, USER_DETAILS_RESET, USER_DETAILS_SUCCESS, USER_LIST_FAIL, USER_LIST_REQUEST, USER_LIST_RESET, USER_LIST_SUCCESS, USER_LOGIN_FAIL, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_LOGOUT, USER_REGISTER_FAIL, USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS, USER_UPDATE_FAIL, USER_UPDATE_PROFILE_FAIL, USER_UPDATE_PROFILE_REQUEST, USER_UPDATE_PROFILE_SUCCESS, USER_UPDATE_REQUEST, USER_UPDATE_SUCCESS} from '../constants/userConstants'
+import {USER_DELETE_FAIL, USER_DELETE_REQUEST, USER_DELETE_SUCCESS, USER_DETAILS_FAIL, USER_DETAILS_REQUEST, USER_DETAILS_RESET, USER_DETAILS_SUCCESS, USER_LIST_FAIL, USER_LIST_REQUEST, USER_LIST_RESET, USER_LIST_SUCCESS, USER_LOGIN_FAIL, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_LOGOUT, USER_REGISTER_FAIL, USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS, USER_UPDATE_FAIL, USER_UPDATE_PROFILE_FAIL, USER_UPDATE_PROFILE_REQUEST, USER_UPDATE_PROFILE_SUCCESS, USER_UPDATE_REQUEST, USER_UPDATE_SUCCESS, USER_VERIFY_FAIL, USER_VERIFY_REQUEST, USER_VERIFY_SUCCESS} from '../constants/userConstants'
 import axios from 'axios'
 import { ORDER_LIST_MY_RESET} from '../constants/orderConstants'
 
@@ -56,7 +56,7 @@ export const logout = () => (dispatch)=>{
     document.location.href = '/login'
 }
 
-export const register = (name,email,password) => async(dispatch) =>{
+export const register = (name,email,password,verified) => async(dispatch) =>{
     try {
         dispatch({
             type: USER_REGISTER_REQUEST
@@ -69,7 +69,7 @@ export const register = (name,email,password) => async(dispatch) =>{
             }
         }
         //Making request in the headers.
-        const {data} = await axios.post('/api/users',{name,email,password},config)
+        const {data} = await axios.post('/api/users',{name,email,password,verified},config)
 
         //Getting user data
         dispatch({
@@ -87,6 +87,39 @@ export const register = (name,email,password) => async(dispatch) =>{
     } catch (error) {
         dispatch({
             type: USER_REGISTER_FAIL,
+            payload: error.response && 
+                error.response.data.message ? error.response.data.message :
+                error.message
+        })
+    }
+}
+//Verifying mail
+export const verify = (otp) => async(dispatch) =>{
+    try {
+        dispatch({
+            type: USER_VERIFY_REQUEST
+        })
+        //When we are sending data we want to send in headers
+        //content-type app/json
+        const config = {
+            headers:{
+                'Content-Type': 'application/json'
+            }
+        }
+        //Making request in the headers.
+        const {data} = await axios.post(`/api/users/verify`,{otp},config)
+
+        //Getting user data
+        dispatch({
+            type: USER_VERIFY_SUCCESS,
+            payload: data
+        })
+        //Saving user in localStorage
+        localStorage.setItem('userId',JSON.stringify(data))
+
+    } catch (error) {
+        dispatch({
+            type: USER_VERIFY_FAIL,
             payload: error.response && 
                 error.response.data.message ? error.response.data.message :
                 error.message
