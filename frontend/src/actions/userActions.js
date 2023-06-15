@@ -94,7 +94,7 @@ export const register = (name,email,password,verified) => async(dispatch) =>{
     }
 }
 //Verifying mail
-export const verify = (otp) => async(dispatch) =>{
+export const verify = (userId,otp) => async(dispatch) =>{
     try {
         dispatch({
             type: USER_VERIFY_REQUEST
@@ -107,7 +107,7 @@ export const verify = (otp) => async(dispatch) =>{
             }
         }
         //Making request in the headers.
-        const {data} = await axios.post(`/api/users/verifyOTP/`,{otp},config)
+        const {data} = await axios.post(`/api/users/verifyOTP/`,{userId},{otp},config)
 
         //Getting user data
         dispatch({

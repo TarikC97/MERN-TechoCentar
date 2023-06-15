@@ -16,10 +16,10 @@ const VerifyEmailScreen = () => {
   // const userVerify = useSelector(state=>state.userVerify)
   // const {userId} = userVerify
   
-  const userRegister = useSelector(state =>state.userRegister)
-  const {userInfo} = userRegister
+  const userVerify = useSelector(state =>state.userVerify)
+  const {userId} = userVerify
 
-  console.log(userInfo)
+  console.log(userId._id)
   // const proba = JSON.parse(localStorage.getItem('userInfo'))
   // console.log(proba)
 
@@ -31,7 +31,8 @@ const VerifyEmailScreen = () => {
 
   const submitForm = (e)=>{
     e.preventDefault()
-
+    dispatch(verify(userId._id,token))
+    navigate('/login')
   }
   
   return <FormContainer>

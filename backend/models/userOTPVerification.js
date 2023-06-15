@@ -1,13 +1,6 @@
 import mongoose from "mongoose";
 
 const UserOTPVerificationSchema = mongoose.Schema({
-    user:{
-        //Which user(admin)create which product
-         type: mongoose.Schema.Types.ObjectId,
-         required: true,
-         //Ads relationship between product and user
-         ref:'User'
-    },
     userId:{
         type:mongoose.Schema.Types.ObjectId,
         required:true,

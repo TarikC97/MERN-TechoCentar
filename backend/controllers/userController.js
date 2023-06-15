@@ -60,14 +60,14 @@ const registerUser = asyncHandler(async(req,res)=>{
   //if user is created,display data
   if(user){
    sendOTPVerificationEmail(user,res)
-   // res.status(201).json({
-   //    // _id: user._id,
-   //    // name: user.name,
-   //    // email: user.email,
+   res.status(201).json({
+          _id: user._id,
+       // name: user.name,
+          email: user.email,
+          verified: user.verified
    //    // isAdmin: user.isAdmin,
-   //    // token: generateToken(user._id)
-     
-   // })
+   //    // token: generateToken(user._id) 
+ })
   }
   else{
    res.status(400)
@@ -161,7 +161,7 @@ const verifyEmail = async(req,res)=>{
               else{
                //success
                await User.updateOne({_id:userId},{verified:true})
-               await UserOTPVerification.deleteOne({userId:userId})
+               await UserOTPVerification.deleteOne({_id:userId})
                res.json({
                   status: "VERIFIED",
                   message:"User email verified successfully!"
