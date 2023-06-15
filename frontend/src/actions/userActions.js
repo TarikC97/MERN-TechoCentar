@@ -107,7 +107,7 @@ export const verify = (otp) => async(dispatch) =>{
             }
         }
         //Making request in the headers.
-        const {data} = await axios.post(`/api/users/verify`,{otp},config)
+        const {data} = await axios.post(`/api/users/verifyOTP/`,{otp},config)
 
         //Getting user data
         dispatch({

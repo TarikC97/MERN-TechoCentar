@@ -161,7 +161,7 @@ const verifyEmail = async(req,res)=>{
               else{
                //success
                await User.updateOne({_id:userId},{verified:true})
-               await UserOTPVerification.deleteOne({userId})
+               await UserOTPVerification.deleteOne({userId:userId})
                res.json({
                   status: "VERIFIED",
                   message:"User email verified successfully!"

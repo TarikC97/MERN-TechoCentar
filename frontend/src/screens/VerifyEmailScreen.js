@@ -12,24 +12,26 @@ const VerifyEmailScreen = () => {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const userVerify = useSelector(state=>state.userVerify)
-  const {userId} = userVerify
 
-  //  const userRegister = useSelector(state=>state.userRegister)
-  //  const {userInfo}= userRegister
+  // const userVerify = useSelector(state=>state.userVerify)
+  // const {userId} = userVerify
+  
+  const userRegister = useSelector(state =>state.userRegister)
+  const {userInfo} = userRegister
 
-  useEffect(()=>{
-     if(userId.otp === token){
-       navigate('/login')
-     }
-     else{
-      alert('Wrong gode!')
-     }
-  },[navigate,userId])
+  console.log(userInfo)
+  // const proba = JSON.parse(localStorage.getItem('userInfo'))
+  // console.log(proba)
+
+  // useEffect(()=>{
+  //   if(userId){
+  //     navigate('/verify')
+  //   } 
+  // },[userId,navigate])
 
   const submitForm = (e)=>{
     e.preventDefault()
-    dispatch(verify(token))
+
   }
   
   return <FormContainer>

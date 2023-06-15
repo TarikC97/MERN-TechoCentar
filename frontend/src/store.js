@@ -42,6 +42,9 @@ const userInfoFromStorage = localStorage.getItem('userInfo') ? JSON.parse(localS
 //Getting ShippingAdress data from LocalStorage(Needs to be String)
 const shippingAddressFromStorage = localStorage.getItem('shippingAddress') ? JSON.parse(localStorage.getItem('shippingAddress')): {}
 
+//Getting userId(with emailToken) from LocalStorage
+const userIdFromStorage = localStorage.getItem('userId') ? JSON.parse(localStorage.getItem('userId')): null
+
 //Getting CartItems
 //Getting userData
 const initialState = {
@@ -49,8 +52,8 @@ const initialState = {
         cartItems:cartItemsFromStorage,
         shippingAddress: shippingAddressFromStorage,
     },
+    userVerify: {userId: userIdFromStorage},
     userLogin: {userInfo: userInfoFromStorage},
-
 }
 const middleware = [thunk]
 
