@@ -20,8 +20,8 @@ const VerifyEmailScreen = () => {
    const {loading,error,userInfo} = userRegister
 
   //console.log(userInfo.data.userId)
-    const id = userInfo.data.userId
-    const otp = userInfo.data.mailOtp
+    let id = userInfo.data.userId
+    let otp = userInfo.data.mailOtp
 
   const submitForm = (e)=>{
     e.preventDefault()

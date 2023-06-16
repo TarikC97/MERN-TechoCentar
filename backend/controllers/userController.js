@@ -111,7 +111,6 @@ const sendOTPVerificationEmail = async({_id,email},res)=>{
          otp: hashedOTP,
          //Hashing pw in userModel
          createdAt: Date.now(),
-         expiresAt: Date.now()*360000,
      })
      await newOTPVerifciation.save()
      await transporter.sendMail(mailOptions)
@@ -148,15 +147,8 @@ const verifyEmail = async(req,res)=>{
             throw new Error("Account doesnt exist , or it has been already veified!")
          }
          else{
-            //otp record exists
-            const {expiresAt } = UserOTPVerificationRecords[0]
-            const hashedOTP = UserOTPVerificationRecords[0].otp
-            if(expiresAt < Date.now()){
-               //otp record has expired
-               await UserOTPVerificationRecords.deleteOne({userId})
-               throw new Error("Code has expired. Please request again!")
-            }
-            else{
+               //otp record exists
+              const hashedOTP = UserOTPVerificationRecords[0].otp
                //Compared received otp from db hashedOTP
               const validOTP = await bcrypt.compare(otp,hashedOTP)
               if(!validOTP){
@@ -176,7 +168,7 @@ const verifyEmail = async(req,res)=>{
             }
          }
       }
-   } catch (error) {
+    catch (error) {
       res.json({
          status:"FAILED",
          message:error.message

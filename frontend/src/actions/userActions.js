@@ -115,8 +115,6 @@ export const verify = (userId,otp) => async(dispatch) =>{
             payload: data
         })
         //Saving userId in localStorage
-        localStorage.removeItem('userId')
-
     } catch (error) {
         dispatch({
             type: USER_VERIFY_FAIL,
