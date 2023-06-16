@@ -12,6 +12,7 @@ const LoginScreen = () => {
 
   const [email,setEmail] = useState('')
   const [password,setPassword] = useState('')
+  const [message,setMessage] = useState(null)
 
   const navigate = useNavigate()
   const { search } = useLocation();
@@ -22,6 +23,8 @@ const LoginScreen = () => {
 
   const userLogin = useSelector(state =>state.userLogin)
   const {loading,error,userInfo} = userLogin
+
+  console.log(userInfo)
 
   useEffect(()=>{
     if(userInfo){
@@ -35,10 +38,17 @@ const LoginScreen = () => {
     e.preventDefault()
     //Dipatch Login as user logs in
     dispatch(login(email,password))
+    // if(userInfo.verified === true){
+    //   navigate('/')
+    // }
+    // else{
+    //     setMessage('User is not verified!')
+    // }
   }
 
   return <FormContainer>
         <h1>Sign In</h1>
+        {message && <Message variant='danger'>{message}</Message>}
         {error && <Message variant='danger'>{error}</Message>}
         {loading && <Loader />}
         <Form onSubmit={submitHandler}>

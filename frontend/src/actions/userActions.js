@@ -107,14 +107,15 @@ export const verify = (userId,otp) => async(dispatch) =>{
             }
         }
         //Making request in the headers.
-        const {data} = await axios.post(`/api/users/verifyOTP/`,{userId},{otp},config)
+        const {data} = await axios.post(`/api/users/verifyOTP/`,{userId,otp},config)
 
         //Getting user data
         dispatch({
             type: USER_VERIFY_SUCCESS,
             payload: data
         })
-        //Saving user in localStorage
+        //Saving userId in localStorage
+        localStorage.removeItem('userId')
         localStorage.setItem('userId',JSON.stringify(data))
 
     } catch (error) {

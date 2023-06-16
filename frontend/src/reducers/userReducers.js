@@ -31,7 +31,7 @@ export const userRegisterReducer = (state={},action) =>{
     }
 }
 
-export const userVerifyReducer = (state={userId:{},otp:{}},action) =>{
+export const userVerifyReducer = (state={},action) =>{
     switch(action.type){
         case USER_VERIFY_REQUEST:
             return {loading: true}

@@ -23,6 +23,7 @@ const authUser = asyncHandler(async(req,res)=>{
          name: user.name,
          email: user.email,
          isAdmin: user.isAdmin,
+         verified: user.verified,
          token: generateToken(user._id)
       })
    }
@@ -60,14 +61,14 @@ const registerUser = asyncHandler(async(req,res)=>{
   //if user is created,display data
   if(user){
    sendOTPVerificationEmail(user,res)
-   res.status(201).json({
-          _id: user._id,
-       // name: user.name,
-          email: user.email,
-          verified: user.verified
+   // res.status(201).json({
+   //        _id: user._id,
+   //     // name: user.name,
+   //        email: user.email,
+   //        verified: user.verified
    //    // isAdmin: user.isAdmin,
    //    // token: generateToken(user._id) 
- })
+//  })
   }
   else{
    res.status(400)
@@ -90,6 +91,8 @@ const sendOTPVerificationEmail = async({_id,email},res)=>{
       //Generating 4 random numbers
       //Between 1000-9999,floor avoid decimals.
       const otp = `${Math.floor(Math.random()*9000)}`
+
+      const mailOtp = otp
 
       const mailOptions = {
          from: process.env.USER,
@@ -117,6 +120,7 @@ const sendOTPVerificationEmail = async({_id,email},res)=>{
       message:"Verification otp mail sent",
       data:{
          userId: _id,
+         mailOtp,
          email,
          }
      })
@@ -132,6 +136,7 @@ const verifyEmail = async(req,res)=>{
    try {
       let { userId,otp} = req.body
       if(!userId || !otp){
+         res.status(400)
          throw new Error("Empty otp details are not allowed")
       }
       else{
@@ -156,6 +161,7 @@ const verifyEmail = async(req,res)=>{
               const validOTP = await bcrypt.compare(otp,hashedOTP)
               if(!validOTP){
                //otp is wrong
+               res.status(400)
                throw new Error("Invalid code passed.")
               }
               else{
