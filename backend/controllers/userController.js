@@ -183,28 +183,6 @@ const verifyEmail = async(req,res)=>{
       })
    }
 }
-//Resend email verification
-const resendEmail = async(req,res)=>{
-   try {
-      let{userId,email} = req.body
-
-      if(!userId || !email){
-         throw Error("Empty user details not allowed")
-      }
-      else{
-         //Delete existing record and resend
-         await User.updateOne({_id:userId},{verified:false})
-         await UserOTPVerification.deleteOne({userId})
-         sendOTPVerificationEmail({_id:userId,email},res)
-      }
-   } catch (error) {
-      res.json({
-         status:"FAILED",
-         message: error.message
-      })
-   }
-}
-
 //@description Get user profile
 //@route Get/api/users/profile
 //@access Private
@@ -327,7 +305,6 @@ export {
    registerUser,
    sendOTPVerificationEmail,
    verifyEmail,
-   resendEmail,
    getUserProfile,
    updateUserProfile,
    getUsers,

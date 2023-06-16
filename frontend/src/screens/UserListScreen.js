@@ -52,6 +52,7 @@ const UserListScreen = () => {
                     <th>NAME</th>
                     <th>EMAIL</th>
                     <th>ADMIN</th>
+                    <th>VERIFIED</th>
                     <th></th>
                 </tr>
             </thead>
@@ -68,6 +69,7 @@ const UserListScreen = () => {
                                 style={{color:'red'}}></i>
                             )}
                         </td>
+                        <td>{user.verified ? <p>True</p>: <p>False</p>}</td>
                         <td>
                             <LinkContainer to={`/admin/${user._id}/edit`}>
                                 <Button variant='light' className='btn-sm'>

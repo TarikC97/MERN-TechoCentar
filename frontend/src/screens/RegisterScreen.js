@@ -27,7 +27,7 @@ const RegisterScreen = () => {
     if(userInfo){
       navigate(`/verify`)
     }
-  },[userInfo])
+  },[userInfo,navigate])
 
 
   const submitHandler = (e) =>{

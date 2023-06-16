@@ -116,7 +116,6 @@ export const verify = (userId,otp) => async(dispatch) =>{
         })
         //Saving userId in localStorage
         localStorage.removeItem('userId')
-        localStorage.setItem('userId',JSON.stringify(data))
 
     } catch (error) {
         dispatch({
